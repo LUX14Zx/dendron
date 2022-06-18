@@ -94,6 +94,8 @@ import { WorkspaceActivator } from "./workspace/workspaceActivater";
 import { WorkspaceInitFactory } from "./workspace/WorkspaceInitFactory";
 import { WSUtils } from "./WSUtils";
 import setupRecentWorkspacesTreeView from "./features/RecentWorkspacesTreeview";
+import { ShowVisualizationCommand } from "./commands/ShowVisualization";
+import { VisualizationFactory } from "./components/views/VisualizationFactory";
 
 const MARKDOWN_WORD_PATTERN = new RegExp("([\\w\\.\\#]+)");
 // === Main
@@ -1223,6 +1225,19 @@ async function _setupCommands({
               NoteGraphPanelFactory.create(ws, ws.getEngine())
             ).run();
           })
+        )
+      );
+    }
+
+    if (!existingCommands.includes(DENDRON_COMMANDS.SHOW_VISUALIZATION.key)) {
+      context.subscriptions.push(
+        vscode.commands.registerCommand(
+          DENDRON_COMMANDS.SHOW_VISUALIZATION.key,
+          async () => {
+            await new ShowVisualizationCommand(
+              VisualizationFactory.create(ws, ws.getEngine())
+            ).run();
+          }
         )
       );
     }
