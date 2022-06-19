@@ -1282,6 +1282,7 @@
     "@dendronhq/api-server": "^0.99.0",
     "@dendronhq/common-all": "^0.99.0",
     "@dendronhq/common-server": "^0.99.0",
+    "@dendronhq/dendron-viz": "^0.99.0",
     "@dendronhq/engine-server": "^0.99.0",
     "@dendronhq/pods-core": "^0.99.0",
     "@sentry/integrations": "^6.13.1",
