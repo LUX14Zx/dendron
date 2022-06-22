@@ -29,6 +29,7 @@ export enum VSCodeEvents {
   HelpAndFeedbackItemClicked = "HelpAndFeedbackItemClicked",
   BacklinksPanelUsed = "BacklinksPanelUsed",
   RecentWorkspacesPanelUsed = "RecentWorkspacesPanelUsed",
+  V100ReleaseNotesShown = "V100ReleaseNotesShown",
 }
 
 export enum CLIEvents {
@@ -132,6 +133,8 @@ export enum ConfigEvents {
   DuplicateConfigEntryMessageConfirm = "DuplicateConfigEntryMessageConfirm",
   MissingSelfContainedVaultsMessageShow = "MissingSelfContainedVaultsMessageShow",
   MissingSelfContainedVaultsMessageAccept = "MissingSelfContainedVaultsMessageAccept",
+  OutdatedSeedVaultMessageShow = "OutdatedSeedVaultMessageShow",
+  OutdatedSeedVaultMessageAccept = "OutdatedSeedVaultMessageAccept",
 }
 
 export enum MigrationEvents {
@@ -149,6 +152,7 @@ export enum ContextualUIEvents {
 export enum WorkspaceEvents {
   AutoFix = "AutoFix",
   DuplicateNoteFound = "DuplicateNoteFound",
+  TransitiveDepsWarningShow = "TransitiveDepsWarningShow",
 }
 
 export enum NativeWorkspaceEvents {

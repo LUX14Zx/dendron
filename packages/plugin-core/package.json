@@ -4,7 +4,7 @@
   "displayName": "dendron",
   "description": "Dendron is a hierarchal note taking tool that grows as you do. ",
   "publisher": "dendron",
-  "version": "0.99.0",
+  "version": "0.100.0",
   "sponsor": {
     "url": "https://accounts.dendron.so/account/subscribe"
   },
@@ -160,6 +160,16 @@
         "icon": "$(expand-all)"
       },
       {
+        "command": "dendron.graph-panel.increaseDepth",
+        "title": "Increase Depth",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "dendron.graph-panel.decreaseDepth",
+        "title": "Decrease Depth",
+        "icon": "$(arrow-down)"
+      },
+      {
         "command": "dendron.browseNote",
         "title": "Dendron: Browse Note"
       },
@@ -198,10 +208,6 @@
       {
         "command": "dendron.deleteNode",
         "title": "Dendron: Delete Node"
-      },
-      {
-        "command": "dendron.insertNote",
-        "title": "Dendron: Insert Note"
       },
       {
         "command": "dendron.insertNoteLink",
@@ -579,10 +585,6 @@
           "when": "dendron:pluginActive"
         },
         {
-          "command": "dendron.insertNote",
-          "when": "dendron:pluginActive"
-        },
-        {
           "command": "dendron.insertNoteLink",
           "when": "dendron:pluginActive"
         },
@@ -900,6 +902,16 @@
         {
           "command": "dendron.treeView.expandAll",
           "when": "view == dendron.treeView && dendron:devMode",
+          "group": "navigation@2"
+        },
+        {
+          "command": "dendron.graph-panel.increaseDepth",
+          "when": "view == dendron.graph-panel",
+          "group": "navigation@2"
+        },
+        {
+          "command": "dendron.graph-panel.decreaseDepth",
+          "when": "view == dendron.graph-panel",
           "group": "navigation@2"
         }
       ],
@@ -1238,8 +1250,8 @@
     "rimraf": "npx rimraf"
   },
   "devDependencies": {
-    "@dendronhq/common-test-utils": "^0.99.0",
-    "@dendronhq/engine-test-utils": "^0.99.0",
+    "@dendronhq/common-test-utils": "^0.100.0",
+    "@dendronhq/engine-test-utils": "^0.100.0",
     "@sentry/webpack-plugin": "^1.17.1",
     "@types/execa": "^2.0.0",
     "@types/fs-extra": "^9.0.1",
@@ -1275,11 +1287,11 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@dendronhq/api-server": "^0.99.0",
-    "@dendronhq/common-all": "^0.99.0",
-    "@dendronhq/common-server": "^0.99.0",
-    "@dendronhq/engine-server": "^0.99.0",
-    "@dendronhq/pods-core": "^0.99.0",
+    "@dendronhq/api-server": "^0.100.0",
+    "@dendronhq/common-all": "^0.100.0",
+    "@dendronhq/common-server": "^0.100.0",
+    "@dendronhq/engine-server": "^0.100.0",
+    "@dendronhq/pods-core": "^0.100.0",
     "@sentry/integrations": "^6.13.1",
     "@sentry/node": "^6.13.1",
     "@types/vscode": "1.62.0",

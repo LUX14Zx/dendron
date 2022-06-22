@@ -14,12 +14,9 @@ import {
   EngineInfoResp,
   EngineUpdateNodesOptsV2,
   EngineWriteOptsV2,
-  GetNoteOptsV2,
-  GetNotePayload,
   NoteProps,
   RenameNoteOpts,
   RenameNotePayload,
-  RespRequired,
   RespV2,
   SchemaModuleProps,
   WriteNoteResp,
@@ -129,7 +126,6 @@ export type WorkspaceSyncRequest = WorkspaceRequest;
 export type WorkspaceRequest = { ws: string };
 
 export type EngineQueryRequest = DEngineQuery & { ws: string };
-export type EngineGetNoteByPathRequest = GetNoteOptsV2 & { ws: string };
 export type EngineRenameNoteRequest = RenameNoteOpts & { ws: string };
 export type EngineUpdateNoteRequest = { ws: string } & {
   note: NoteProps;
@@ -203,7 +199,6 @@ export type WorkspaceSyncPayload = InitializePayload;
 export type WorkspaceListPayload = APIPayload<{ workspaces: string[] }>;
 
 export type EngineQueryPayload = APIPayload<DNodeProps[]>;
-export type EngineGetNoteByPathPayload = APIPayload<GetNotePayload>;
 export type EngineRenameNotePayload = APIPayload<RenameNotePayload>;
 export type EngineUpdateNotePayload = APIPayload<NoteProps>;
 export type EngineDeletePayload = APIPayload<EngineDeleteNotePayload>;
@@ -427,17 +422,7 @@ export class DendronAPI extends API {
     });
   }
 
-  engineGetNoteByPath(
-    req: EngineGetNoteByPathRequest
-  ): Promise<EngineGetNoteByPathPayload> {
-    return this._makeRequest({
-      path: "note/getByPath",
-      method: "post",
-      body: req,
-    });
-  }
-
-  engineInfo(): Promise<RespRequired<EngineInfoResp>> {
+  engineInfo(): Promise<RespV2<EngineInfoResp>> {
     return this._makeRequest({
       path: "note/info",
       method: "get",

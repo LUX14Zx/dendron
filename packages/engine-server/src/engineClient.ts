@@ -30,8 +30,6 @@ import {
   GetNoteBlocksOpts,
   GetNoteBlocksPayload,
   GetNoteLinksPayload,
-  GetNoteOptsV2,
-  GetNotePayload,
   IntermediateDendronConfig,
   NoteChangeEntry,
   NoteFnameDictUtils,
@@ -46,7 +44,6 @@ import {
   RenameNoteOpts,
   RenameNotePayload,
   RenderNoteOpts,
-  RespRequired,
   RespV2,
   SchemaModuleDict,
   SchemaModuleProps,
@@ -244,7 +241,10 @@ export class DendronEngineClient implements DEngineClient, EngineEventEmitter {
     const ws = this.ws;
     const resp = await this.api.engineDelete({ id, opts, ws });
     if (!resp.data) {
-      throw new DendronError({ message: "no data" });
+      throw new DendronError({
+        message: `Failed to delete note with id ${id}`,
+        payload: resp.error,
+      });
     }
     await this.refreshNotesV2(resp.data);
 
@@ -287,18 +287,7 @@ export class DendronEngineClient implements DEngineClient, EngineEventEmitter {
     return resp;
   }
 
-  async getNoteByPath(opts: GetNoteOptsV2): Promise<RespV2<GetNotePayload>> {
-    const resp = await this.api.engineGetNoteByPath({
-      ...opts,
-      ws: this.ws,
-    });
-    if (!_.isUndefined(resp.data)) {
-      await this.refreshNotesV2(resp.data.changed);
-    }
-    return resp;
-  }
-
-  async info(): Promise<RespRequired<EngineInfoResp>> {
+  async info(): Promise<RespV2<EngineInfoResp>> {
     const resp = await this.api.engineInfo();
     return resp;
   }
@@ -446,24 +435,24 @@ export class DendronEngineClient implements DEngineClient, EngineEventEmitter {
   }
 
   async updateNote(note: NoteProps, opts?: EngineUpdateNodesOptsV2) {
-    const existing = await this.api.engineGetNoteByPath({
-      vault: note.vault,
-      ws: this.ws,
-      npath: note.fname,
-      createIfNew: false,
-    });
+    const existing = await this.getNote(note.id);
 
     const resp = await this.api.engineUpdateNote({ ws: this.ws, note, opts });
     const noteClean = resp.data;
     if (_.isUndefined(noteClean)) {
-      throw new DendronError({ message: "error updating note", payload: resp });
+      throw new DendronError({
+        message: `error updating note: ${JSON.stringify(
+          NoteUtils.toNoteLoc(note)
+        )}`,
+        payload: resp,
+      });
     }
 
     // If no note existed, treat this as a create.
-    const changeEntry: NoteChangeEntry = existing.data?.note
+    const changeEntry: NoteChangeEntry = existing
       ? {
           note: noteClean,
-          prevNote: existing.data?.note,
+          prevNote: existing,
           status: "update",
         }
       : {

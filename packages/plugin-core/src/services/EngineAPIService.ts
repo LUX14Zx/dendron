@@ -26,8 +26,6 @@ import {
   GetNoteBlocksOpts,
   GetNoteBlocksPayload,
   GetNoteLinksPayload,
-  GetNoteOptsV2,
-  GetNotePayload,
   IntermediateDendronConfig,
   NoteChangeEntry,
   NoteProps,
@@ -40,7 +38,6 @@ import {
   RenameNotePayload,
   RenderNoteOpts,
   RenderNotePayload,
-  RespRequired,
   RespV2,
   SchemaModuleDict,
   SchemaModuleProps,
@@ -270,17 +267,12 @@ export class EngineAPIService
     return this._internalEngine.deleteSchema(id, opts);
   }
 
-  info(): Promise<RespRequired<EngineInfoResp>> {
+  info(): Promise<RespV2<EngineInfoResp>> {
     return this._internalEngine.info();
   }
 
   sync(opts?: DEngineSyncOpts | undefined): Promise<DEngineInitResp> {
     return this._internalEngine.sync(opts);
-  }
-
-  getNoteByPath(opts: GetNoteOptsV2): Promise<RespV2<GetNotePayload>> {
-    // opts.npath = opts.overrides?.types
-    return this._internalEngine.getNoteByPath(opts);
   }
 
   getSchema(qs: string): Promise<RespV2<SchemaModuleProps>> {

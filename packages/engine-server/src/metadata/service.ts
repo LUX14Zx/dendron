@@ -135,6 +135,17 @@ type Metadata = Partial<{
    * The most recently opened Dendron workspaces
    */
   recentWorkspaces: string[];
+
+  /**
+   * One-off setting for tracking whether we've shown the v100 release notes
+   * message
+   */
+  v100ReleaseMessageShown: boolean;
+
+  /**
+   * level set by user for local graph view and graph panel
+   */
+  graphDepth: number;
 }>;
 
 export enum InactvieUserMsgStatusEnum {
@@ -241,12 +252,20 @@ export class MetadataService {
     return this.getMeta().recentWorkspaces;
   }
 
+  get graphDepth(): number | undefined {
+    return this.getMeta().graphDepth;
+  }
+
   setMeta(key: keyof Metadata, value: any) {
     const stateFromFile = this.getMeta();
     stateFromFile[key] = value;
     fs.writeJSONSync(MetadataService.metaFilePath(), stateFromFile, {
       spaces: 4,
     });
+  }
+
+  get v100ReleaseMessageShown(): boolean | undefined {
+    return this.getMeta().v100ReleaseMessageShown;
   }
 
   /**
@@ -323,6 +342,12 @@ export class MetadataService {
       this.setMeta("graphTheme", graphTheme);
     }
   }
+  set graphDepth(graphDepth: number | undefined) {
+    const meta = this.getMeta();
+    if (meta.graphDepth !== graphDepth) {
+      this.setMeta("graphDepth", graphDepth);
+    }
+  }
 
   setTreeViewItemLabelType(labelType: TreeViewItemLabelTypeEnum) {
     this.setMeta("treeViewItemLabelType", labelType);
@@ -338,6 +363,10 @@ export class MetadataService {
 
   set priorTools(priorTools: PriorTools[] | undefined) {
     this.setMeta("priorTools", priorTools);
+  }
+
+  set v100ReleaseMessageShown(hasShown) {
+    this.setMeta("v100ReleaseMessageShown", hasShown);
   }
 
   // Add a single path to recent workspaces. Recent workspaces acts like a FIFO

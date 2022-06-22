@@ -4,10 +4,13 @@ import { FOLDERS, normalizeUnixPath } from ".";
 import { CONSTANTS } from "./constants";
 import { DendronError } from "./error";
 import { DVault, WorkspaceFolderRaw } from "./types";
+import { NonOptional } from "./utils";
 
 export type SelfContainedVault = Omit<DVault, "selfContained"> & {
   selfContained: true;
 };
+
+export type SeedVault = NonOptional<DVault, "seed">;
 
 export class VaultUtils {
   static getName(vault: DVault): string {
@@ -40,6 +43,10 @@ export class VaultUtils {
 
   static isSelfContained(vault: DVault): vault is SelfContainedVault {
     return vault.selfContained === true;
+  }
+
+  static isSeed(vault: DVault): vault is SeedVault {
+    return vault.seed !== undefined;
   }
 
   static isRemote(vault: DVault): boolean {
@@ -232,10 +239,13 @@ export class VaultUtils {
 
   static toWorkspaceFolder(vault: DVault): WorkspaceFolderRaw {
     const name = VaultUtils.getName(vault);
-    const _path = VaultUtils.getRelPath(vault);
+    const vaultPath = VaultUtils.getRelPath(vault);
     return {
-      path: _path,
-      name: name === _path || path.basename(_path) === name ? undefined : name,
+      path: normalizeUnixPath(vaultPath),
+      name:
+        name === vaultPath || path.basename(vaultPath) === name
+          ? undefined
+          : name,
     };
   }
 

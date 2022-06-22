@@ -276,19 +276,14 @@ export type BooleanResp =
   | { data: true; error: null }
   | { data: false; error: IDendronError };
 
+export type DataWithOptError<T> = {
+  data: T;
+  error?: IDendronError;
+};
+
 export function isDendronResp<T = any>(args: any): args is RespV2<T> {
   return args?.error instanceof DendronError;
 }
-
-/**
- * @deprecated - use RespV2<T> instead.
- */
-export type RespRequired<T> =
-  | {
-      error: null | undefined;
-      data: T;
-    }
-  | { error: IDendronError; data: undefined };
 
 export interface QueryOptsV2 {
   /**
@@ -310,21 +305,6 @@ export type EngineUpdateNodesOptsV2 = {
    * New Node, should add to `fullNode` cache
    */
   newNode: boolean;
-};
-export type GetNoteOptsV2 = {
-  vault: DVault;
-  /**
-   * Note file name minus the extension
-   */
-  npath: string;
-  /**
-   * If node does not exist, create it?
-   */
-  createIfNew?: boolean;
-  /**
-   * Override any props
-   */
-  overrides?: Partial<NoteProps>;
 };
 export type EngineDeleteOptsV2 = EngineDeleteOpts;
 export type EngineWriteOptsV2 = {
@@ -555,10 +535,6 @@ export type GetNoteLinksPayload = RespV2<DLink[]>;
 export type GetAnchorsResp = { [index: string]: DNoteAnchorPositioned };
 export type GetNoteAnchorsPayload = RespV2<GetAnchorsResp>;
 
-export type GetNotePayload = {
-  note: NoteProps | undefined;
-  changed: NoteChangeEntry[];
-};
 export type QueryNotesOpts = {
   qs: string;
 
@@ -608,10 +584,9 @@ export type DEngine = DCommonProps &
       id: string,
       opts?: EngineDeleteOptsV2
     ) => Promise<DEngineDeleteSchemaResp>;
-    info: () => Promise<RespRequired<EngineInfoResp>>;
+    info: () => Promise<RespV2<EngineInfoResp>>;
     sync: (opts?: DEngineSyncOpts) => Promise<DEngineInitResp>;
 
-    getNoteByPath: (opts: GetNoteOptsV2) => Promise<RespV2<GetNotePayload>>;
     getSchema: (qs: string) => Promise<RespV2<SchemaModuleProps>>;
     querySchema: (qs: string) => Promise<SchemaQueryResp>;
     queryNotes: (opts: QueryNotesOpts) => Promise<NoteQueryResp>;
@@ -698,7 +673,6 @@ export type DEngineV4Methods = {
   ) => Promise<DEngineDeleteSchemaResp>;
   sync: (opts?: DEngineSyncOpts) => Promise<DEngineInitResp>;
 
-  getNoteByPath: (opts: GetNoteOptsV2) => Promise<RespV2<GetNotePayload>>;
   getSchema: (qs: string) => Promise<RespV2<SchemaModuleProps>>;
   querySchema: (qs: string) => Promise<SchemaQueryResp>;
   queryNotes: (opts: QueryNotesOpts) => Promise<NoteQueryResp>;
@@ -820,11 +794,12 @@ export enum GraphViewMessageEnum {
   "onSelect" = "onSelect",
   "onGetActiveEditor" = "onGetActiveEditor",
   "onReady" = "onReady",
-  "onRequestGraphStyleAndTheme" = "onRequestGraphStyleAndTheme",
-  "onGraphStyleAndThemeLoad" = "onGraphStyleAndThemeLoad",
+  "onRequestGraphOpts" = "onRequestGraphOpts",
+  "onGraphLoad" = "onGraphLoad",
   "onGraphThemeChange" = "onGraphThemeChange",
   "configureCustomStyling" = "configureCustomStyling",
   "toggleGraphView" = "toggleGraphView",
+  "onGraphDepthChange" = "onGraphDepthChange",
 }
 
 export enum CalendarViewMessageType {
@@ -905,6 +880,7 @@ export type GraphViewMessage = DMessage<
     vault?: string;
     graphTheme?: GraphThemeEnum;
     graphType?: GraphTypeEnum;
+    graphDepth?: number;
   }
 >;
 

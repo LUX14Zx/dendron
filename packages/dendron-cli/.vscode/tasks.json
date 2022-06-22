@@ -100,6 +100,12 @@
       "type": "shell",
       "command": "node --inspect ${workspaceFolder}/lib/bin/dendron-cli visualize --wsRoot ${workspaceFolder}/../../test-workspace",
       "problemMatcher": []
+    },
+    {
+      "label": "publish --help",
+      "type": "shell",
+      "command": "node --inspect ${workspaceFolder}/lib/bin/dendron-cli publish --help --wsRoot ${workspaceFolder}/../../test-workspace ",
+      "problemMatcher": []
     }
   ]
 }

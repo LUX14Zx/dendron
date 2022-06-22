@@ -2,8 +2,6 @@ import {
   DendronError,
   EngineDeletePayload,
   EngineDeleteRequest,
-  EngineGetNoteByPathPayload,
-  EngineGetNoteByPathRequest,
   EngineInfoResp,
   EngineRenameNotePayload,
   EngineRenameNoteRequest,
@@ -13,7 +11,6 @@ import {
   NoteQueryResp,
   RenderNoteOpts,
   RenderNotePayload,
-  RespRequired,
   RespV2,
 } from "@dendronhq/common-all";
 import { NodeJSUtils } from "@dendronhq/common-server";
@@ -48,22 +45,6 @@ export class NoteController {
     }
   }
 
-  async getByPath({
-    ws,
-    ...opts
-  }: EngineGetNoteByPathRequest): Promise<EngineGetNoteByPathPayload> {
-    const engine = await getWSEngine({ ws });
-    try {
-      const data = await engine.getNoteByPath(opts);
-      return data;
-    } catch (err) {
-      return {
-        error: new DendronError({ message: JSON.stringify(err) }),
-        data: undefined,
-      };
-    }
-  }
-
   async render({
     ws,
     ...opts
@@ -88,16 +69,24 @@ export class NoteController {
     }
   }
 
-  async info(): Promise<RespRequired<EngineInfoResp>> {
+  async info(): Promise<RespV2<EngineInfoResp>> {
     const ctx = "NoteController:info";
     getLogger().info({ ctx, msg: "enter" });
     try {
       const version = NodeJSUtils.getVersionFromPkg();
+      if (!version) {
+        return {
+          data: undefined,
+          error: DendronError.createPlainError({
+            message: "Unable to read the Dendron version",
+          }),
+        };
+      }
       return {
         data: {
           version,
         },
-        error: undefined,
+        error: null,
       };
     } catch (err) {
       getLogger().error({ ctx, err });

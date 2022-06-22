@@ -246,6 +246,16 @@ export const DENDRON_MENUS = {
       when: `view == dendron.treeView && ${DendronContext.DEV_MODE}`,
       group: "navigation@2",
     },
+    {
+      command: "dendron.graph-panel.increaseDepth",
+      when: "view == dendron.graph-panel",
+      group: "navigation@2",
+    },
+    {
+      command: "dendron.graph-panel.decreaseDepth",
+      when: "view == dendron.graph-panel",
+      group: "navigation@2",
+    },
   ],
   "explorer/context": [
     {
@@ -340,6 +350,17 @@ export const DENDRON_COMMANDS: { [key: string]: CommandEntry } = {
     icon: "$(expand-all)",
     when: DendronContext.DEV_MODE,
   },
+  // graph panel buttons
+  GRAPH_PANEL_INCREASE_DEPTH: {
+    key: "dendron.graph-panel.increaseDepth",
+    title: "Increase Depth",
+    icon: "$(arrow-up)",
+  },
+  GRAPH_PANEL_DECREASE_DEPTH: {
+    key: "dendron.graph-panel.decreaseDepth",
+    title: "Decrease Depth",
+    icon: "$(arrow-down)",
+  },
   // --- Notes
   BROWSE_NOTE: {
     key: "dendron.browseNote",
@@ -418,11 +439,6 @@ export const DENDRON_COMMANDS: { [key: string]: CommandEntry } = {
       mac: "cmd+shift+d",
       when: DendronContext.PLUGIN_ACTIVE,
     },
-    when: DendronContext.PLUGIN_ACTIVE,
-  },
-  INSERT_NOTE: {
-    key: "dendron.insertNote",
-    title: `${CMD_PREFIX} Insert Note`,
     when: DendronContext.PLUGIN_ACTIVE,
   },
   INSERT_NOTE_LINK: {
